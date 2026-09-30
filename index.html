@@ -1,0 +1,811 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Eco-Hackaton | Dr. Luis Osorio Olvera</title>
+    
+    <!-- Tailwind CSS para los estilos -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts: Playfair Display (elegante/clásica) e Inter (limpia/moderna) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome para íconos -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Configuración personalizada de Tailwind y CSS -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        talavera: {
+                            blue: '#123F91',
+                            dark: '#0B2D6B',
+                            light: '#EEF4FC',
+                            white: '#FFFEFA',
+                            cream: '#F8F4EA',
+                            accent: '#E59A16',
+                            green: '#2F6B43',
+                            gold: '#C98210'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        serif: ['Playfair Display', 'serif']
+                    },
+                    boxShadow: {
+                        ceramic: '0 8px 25px rgba(18, 63, 145, 0.10)',
+                        'ceramic-lg': '0 14px 40px rgba(18, 63, 145, 0.14)'
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        :root {
+            --tal-blue: #123F91;
+            --tal-dark: #0B2D6B;
+            --tal-cream: #F8F4EA;
+            --tal-white: #FFFEFA;
+            --tal-orange: #E59A16;
+            --tal-green: #2F6B43;
+        }
+
+        /* Fondo Talavera ornamental integrado en toda la página */
+        body {
+            background-color: #fff;
+            background-image: url('img/fondo.png');
+            background-repeat: no-repeat;
+            background-position: center top;
+            background-size: 100% 100vh;
+            background-attachment: fixed;
+        }
+
+        /* Dejamos que el fondo ornamental se perciba detrás del contenido */
+        .bg-talavera-pattern,
+        .bg-talavera-white {
+            background-color: rgba(255, 254, 250, 0.72) !important;
+            background-image: none !important;
+        }
+
+        /* El nuevo fondo ya aporta la ornamentación lateral */
+        .talavera-motif { display: none; }
+
+        .bg-talavera-pattern {
+            background-color: var(--tal-cream);
+            background-image:
+                radial-gradient(circle at 50% 50%, rgba(18,63,145,.045) 0 2px, transparent 2.5px),
+                linear-gradient(90deg, transparent 49.5%, rgba(18,63,145,.035) 49.5% 50.5%, transparent 50.5%),
+                linear-gradient(0deg, transparent 49.5%, rgba(18,63,145,.035) 49.5% 50.5%, transparent 50.5%);
+            background-size: 44px 44px;
+        }
+
+        .talavera-border {
+            border: 2px solid var(--tal-blue);
+            position: relative;
+            border-radius: 12px;
+        }
+
+        .talavera-border::before {
+            content: '';
+            position: absolute;
+            inset: 5px;
+            border: 1px solid rgba(18,63,145,.28);
+            border-radius: 7px;
+            pointer-events: none;
+        }
+
+        .talavera-border::after {
+            content: '';
+            position: absolute;
+            width: 42px;
+            height: 8px;
+            left: 50%;
+            top: -5px;
+            transform: translateX(-50%);
+            background: var(--tal-cream);
+            border-left: 2px solid var(--tal-blue);
+            border-right: 2px solid var(--tal-blue);
+            pointer-events: none;
+        }
+
+        .tab-active {
+            background-color: var(--tal-blue);
+            color: #fff;
+            border-color: var(--tal-blue);
+            box-shadow: 0 5px 14px rgba(18,63,145,.15);
+        }
+
+        .tab-inactive {
+            background-color: rgba(255,254,250,.75);
+            color: var(--tal-blue);
+            border-color: var(--tal-blue);
+        }
+
+        .tab-inactive:hover { background-color: #EEF4FC; }
+
+        .talavera-motif {
+            position: absolute;
+            width: 110px;
+            height: 110px;
+            opacity: .10;
+            pointer-events: none;
+        }
+
+        .talavera-motif::before,
+        .talavera-motif::after {
+            content: '';
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            border: 3px solid var(--tal-blue);
+            border-radius: 65% 35% 65% 35%;
+        }
+
+        .talavera-motif::before {
+            width: 58px;
+            height: 25px;
+            transform: translate(-8px,-8px) rotate(45deg);
+        }
+
+        .talavera-motif::after {
+            width: 58px;
+            height: 25px;
+            transform: translate(-8px,-8px) rotate(-45deg);
+        }
+
+        .logo-ceramic {
+            border-radius: 50%;
+            object-fit: cover;
+            background: var(--tal-white);
+            box-shadow:
+                0 4px 16px rgba(11,45,107,.16),
+                0 0 0 5px rgba(255,254,250,.95),
+                0 0 0 7px rgba(18,63,145,.18);
+        }
+
+        .hero-ceramic { position: relative; display: inline-block; }
+
+        .hero-ceramic::before,
+        .hero-ceramic::after {
+            content: '';
+            position: absolute;
+            border: 1px solid rgba(18,63,145,.22);
+            border-radius: 50%;
+            pointer-events: none;
+        }
+
+        .hero-ceramic::before { inset: -12px; }
+        .hero-ceramic::after { inset: -21px; border-color: rgba(229,154,22,.24); }
+
+        .ceramic-divider {
+            height: 10px;
+            width: min(300px, 75%);
+            margin: 0 auto;
+            background: linear-gradient(90deg,
+                transparent 0 8%, var(--tal-blue) 8% 28%,
+                var(--tal-orange) 28% 34%, var(--tal-blue) 34% 66%,
+                var(--tal-orange) 66% 72%, var(--tal-blue) 72% 92%,
+                transparent 92%);
+            clip-path: polygon(0 50%, 8% 0, 28% 0, 34% 50%, 40% 0, 60% 0,
+                66% 50%, 72% 0, 92% 0, 100% 50%, 92% 100%, 72% 100%,
+                66% 50%, 60% 100%, 40% 100%, 34% 50%, 28% 100%, 8% 100%);
+            opacity: .8;
+        }
+
+        .info-card { box-shadow: 0 8px 25px rgba(18,63,145,.07); }
+
+        details > summary { list-style: none; }
+        details > summary::-webkit-details-marker { display: none; }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .animate-fade-in { animation: fadeIn 0.4s ease-out forwards; }
+    </style>
+</head>
+<body class="bg-talavera-cream text-gray-800 font-sans antialiased overflow-x-hidden flex flex-col min-h-screen">
+
+    <nav class="bg-white/95 backdrop-blur-sm shadow-md sticky top-0 z-50 border-b-2 border-talavera-blue">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-20">
+                <div class="flex items-center">
+                    <a href="#inicio" class="flex-shrink-0 flex items-center gap-3 group">
+                        <img src="img/logo.png" alt="Eco-Hackaton en memoria del Dr. Luis Osorio Olvera" class="logo-ceramic w-14 h-14 transition duration-300 group-hover:scale-105">
+                        <div class="hidden sm:flex flex-col">
+                            <span class="font-serif font-bold text-xl text-talavera-blue leading-none">Eco-Hackaton</span>
+                            <span class="text-xs text-gray-500 font-medium tracking-wider uppercase mt-1">En memoria de Luis Osorio</span>
+                        </div>
+                    </a>
+                </div>
+                <div class="hidden sm:flex sm:space-x-8 items-center">
+                    <a href="#inicio" class="text-gray-700 hover:text-talavera-blue px-3 py-2 rounded-md font-medium transition border-b-2 border-transparent hover:border-talavera-blue">Inicio</a>
+                    <a href="#acerca-de" class="text-gray-700 hover:text-talavera-blue px-3 py-2 rounded-md font-medium transition border-b-2 border-transparent hover:border-talavera-blue">Acerca de</a>
+                    <a href="#registro" class="bg-talavera-blue text-white px-5 py-2 rounded font-medium hover:bg-blue-800 transition shadow-sm">Registrarse</a>
+                </div>
+                <div class="flex items-center sm:hidden">
+                    <button type="button" onclick="toggleMobileMenu()" class="inline-flex items-center justify-center p-2 rounded-md text-talavera-blue hover:bg-blue-50 focus:outline-none">
+                        <i class="fas fa-bars text-2xl"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div id="mobile-menu" class="hidden sm:hidden bg-white border-t border-gray-200">
+            <div class="px-2 pt-2 pb-3 space-y-1">
+                <a href="#inicio" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-talavera-blue hover:bg-blue-50">Inicio</a>
+                <a href="#acerca-de" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-talavera-blue hover:bg-blue-50">Acerca de</a>
+                <a href="#registro" class="block px-3 py-2 rounded-md text-base font-medium text-talavera-blue hover:bg-blue-50">Registrarse</a>
+            </div>
+        </div>
+    </nav>
+
+   <!-- MAIN CONTENT -->
+<main class="flex-grow">
+
+    <!-- HERO SECTION -->
+    <section id="inicio" class="bg-talavera-pattern py-14 md:py-20 border-b border-gray-200 relative overflow-hidden">
+        <div class="talavera-motif -top-4 -left-4"></div>
+        <div class="talavera-motif -bottom-5 -right-4 rotate-90"></div>
+
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div class="grid grid-cols-1 md:grid-cols-[minmax(260px,390px)_1fr] gap-12 items-center">
+                <div class="flex justify-center">
+                    <div class="hero-ceramic">
+                        <img src="img/ecohackathon circular webp.jpeg" alt="Logo del Eco-Hackaton en memoria del Dr. Luis Osorio Olvera" class="logo-ceramic w-64 h-64 sm:w-72 sm:h-72 md:w-80 md:h-80">
+                    </div>
+                </div>
+
+                <div class="text-center md:text-left">
+                    <p class="text-talavera-accent font-semibold tracking-widest uppercase mb-3 text-sm">Evento Anual Multisede</p>
+                    <h1 class="text-4xl md:text-5xl lg:text-6xl font-serif font-bold text-talavera-blue mb-5 leading-tight">
+                        Eco-Hackaton 2026
+                    </h1>
+                    <div class="ceramic-divider md:mx-0 mb-6"></div>
+                    <p class="text-xl md:text-2xl font-serif italic text-gray-600 mb-7">
+                        En memoria del Dr. Luis Osorio Olvera
+                    </p>
+                    <p class="text-lg text-gray-700 mb-9 max-w-2xl md:max-w-xl">
+                        Te invitamos cordialmente a ser parte de este espacio colaborativo enfocado en resolver problemas de programación en R. Descubre más sobre nuestra misión y la vida del Dr. Osorio en nuestra sección <a href="#acerca-de" class="text-talavera-blue font-semibold underline decoration-2 underline-offset-4 hover:text-blue-800">Acerca de</a>
+                    </p>
+                    <div class="flex justify-center md:justify-start gap-4 flex-wrap">
+                        <a href="#registro" class="bg-talavera-blue text-white px-8 py-3 rounded text-lg font-semibold hover:bg-blue-800 transition shadow-lg flex items-center gap-2">
+                            <i class="fas fa-ticket-alt"></i> Registrarse ahora
+                        </a>
+                        <a href="#acerca-de" class="border-2 border-talavera-blue text-talavera-blue px-8 py-3 rounded text-lg font-semibold hover:bg-blue-50 transition flex items-center gap-2">
+                            <i class="fas fa-info-circle"></i> Conocer más
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- AVISOS Y DETALLES DEL EVENTO -->
+    <section class="py-16 bg-talavera-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-serif font-bold text-talavera-blue mb-4">Avisos y Detalles del Evento</h2>
+                <div class="w-24 h-1 bg-talavera-accent mx-auto"></div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-start">
+                
+                <!-- TARJETA 1: Información General y Sedes -->
+                <div class="talavera-border bg-talavera-white p-6 sm:p-8 shadow-sm info-card">
+                    <h3 class="text-xl font-bold text-talavera-blue mb-6 flex items-center gap-2">
+                        <i class="fas fa-calendar-check text-talavera-accent"></i> Información del evento
+                    </h3>
+                    
+                    <ul class="space-y-4 mb-8">
+                        <li class="flex items-start gap-3">
+                            <i class="fas fa-calendar text-gray-400 mt-1 w-5"></i>
+                            <div><strong class="text-gray-800">Fecha:</strong> 03 de noviembre de 2026</div>
+                        </li>
+                        <li class="flex items-start gap-3">
+                            <i class="fas fa-clock text-gray-400 mt-1 w-5"></i>
+                            <div><strong class="text-gray-800">Horario:</strong> 3:00 pm a 5:00 pm</div>
+                        </li>
+                        <li class="flex items-start gap-3">
+                            <i class="fas fa-users text-gray-400 mt-1 w-5"></i>
+                            <div><strong class="text-gray-800">Modalidad:</strong> Presencial en cualquiera de las sedes.</div>
+                        </li>
+                    </ul>
+
+                    <!-- Subsección Sedes -->
+                    <div class="border-t border-gray-200 pt-6">
+                        <h4 class="text-lg font-bold text-talavera-blue mb-4 flex items-center gap-2">
+                            <i class="fas fa-map-marker-alt text-talavera-accent"></i> Sedes
+                        </h4>
+                        
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <!-- CDMX -->
+                            <div class="bg-white p-4 rounded-lg border border-gray-200 shadow-sm flex flex-col justify-between hover:shadow-md transition">
+                                <div>
+                                    <h5 class="font-bold text-talavera-blue mb-1">CDMX</h5>
+                                    <p class="text-sm text-gray-600 mb-3">Instituto de Ecología (UNAM)</p>
+                                </div>
+                                <a href="https://maps.app.goo.gl/iPehJxXRV7L1N1HC9" target="_blank" rel="noopener noreferrer" class="text-xs font-semibold text-talavera-blue bg-blue-50 hover:bg-talavera-blue hover:text-white py-2 px-3 rounded transition text-center flex items-center justify-center gap-1">
+                                    <i class="fas fa-directions"></i> Ver en Google Maps
+                                </a>
+                            </div>
+
+                            <!-- Xalapa -->
+                            <div class="bg-white p-4 rounded-lg border border-gray-200 shadow-sm flex flex-col justify-between hover:shadow-md transition">
+                                <div>
+                                    <h5 class="font-bold text-talavera-blue mb-1">Xalapa, Ver.</h5>
+                                    <p class="text-sm text-gray-600 mb-3">Inst. de Neuroetología e Inst. de Investigaciones Biológicas (UV)</p>
+                                </div>
+                                <a href="https://maps.app.goo.gl/ZAagX6joJfZ6RaE97" target="_blank" rel="noopener noreferrer" class="text-xs font-semibold text-talavera-blue bg-blue-50 hover:bg-talavera-blue hover:text-white py-2 px-3 rounded transition text-center flex items-center justify-center gap-1">
+                                    <i class="fas fa-directions"></i> Ver en Google Maps
+                                </a>
+                            </div>
+
+                            <!-- Mérida -->
+                            <div class="bg-white p-4 rounded-lg border border-gray-200 shadow-sm flex flex-col justify-between hover:shadow-md transition">
+                                <div>
+                                    <h5 class="font-bold text-talavera-blue mb-1">Mérida, Yuc.</h5>
+                                    <p class="text-sm text-gray-600 mb-3">Instituto de Ecología (UNAM)</p>
+                                </div>
+                                <a href="https://maps.app.goo.gl/CoYEzPcAUaLX5BbT8" target="_blank" rel="noopener noreferrer" class="text-xs font-semibold text-talavera-blue bg-blue-50 hover:bg-talavera-blue hover:text-white py-2 px-3 rounded transition text-center flex items-center justify-center gap-1">
+                                    <i class="fas fa-directions"></i> Ver en Google Maps
+                                </a>
+                            </div>
+
+                            <!-- Puebla -->
+                            <div class="bg-white p-4 rounded-lg border border-gray-200 shadow-sm flex flex-col justify-between hover:shadow-md transition">
+                                <div>
+                                    <h5 class="font-bold text-talavera-blue mb-1">Puebla</h5>
+                                    <p class="text-sm text-gray-600 mb-3">Benemérita Universidad Autónoma de Puebla (BUAP)</p>
+                                </div>
+                                <a href="https://maps.app.goo.gl/5nLgEiW5kWN3vmRi6" target="_blank" rel="noopener noreferrer" class="text-xs font-semibold text-talavera-blue bg-blue-50 hover:bg-talavera-blue hover:text-white py-2 px-3 rounded transition text-center flex items-center justify-center gap-1">
+                                    <i class="fas fa-directions"></i> Ver en Google Maps
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- TARJETA 2: Requisitos, Formato y Paquetes de R -->
+                <div class="talavera-border bg-talavera-white p-6 sm:p-8 shadow-sm info-card">
+                    <h3 class="text-xl font-bold text-talavera-blue mb-6 flex items-center gap-2">
+                        <i class="fas fa-laptop-code text-talavera-accent"></i> Requisitos y Formato
+                    </h3>
+                    
+                    <div class="space-y-6 text-gray-700">
+                        <div>
+                            <h4 class="font-semibold text-gray-800 mb-1">Formato de esta edición:</h4>
+                            <p class="text-sm leading-relaxed">Colaborativo y sin componente competitivo. Cada persona asiste con problemas propios de programación en R y recibe apoyo de organizadores y voluntarios.</p>
+                        </div>
+
+                        <div>
+                            <h4 class="font-semibold text-gray-800 mb-1">¿Qué debes llevar?</h4>
+                            <ul class="list-disc list-inside text-sm space-y-1 text-gray-600">
+                                <li>Tu propia laptop.</li>
+                                <li>Tener instalado y actualizado R y RStudio.</li>
+                                <li>Un termo (Evento cero basura, habrá agua y café).</li>
+                            </ul>
+                        </div>
+
+                            <!-- Bloque de Paquetes Recomendados -->
+                            <div class="bg-gray-50 border border-gray-200 p-4 rounded-lg">
+                                <h4 class="font-bold text-talavera-blue text-sm mb-2 flex items-center gap-2">
+                                    <i class="fab fa-r-project"></i> Paquetes de R recomendados:
+                                </h4>
+                                <p class="text-xs text-gray-600 mb-3">
+                                    Para aprovechar al máximo la jornada, te sugerimos instalar previamente estos paquetes en R:
+                                </p>
+                                <div class="bg-gray-900 text-gray-100 p-3 rounded text-xs font-mono overflow-x-auto mb-2">
+                                    <code>install.packages(c("tidyverse", "sf", "terra", "ggplot2", "ENMeval", "predicts", "maxnet", "wallace", "rgbif", "CoordinateCleaner", "tidyterra", "patchwork", "usethis", "renv"))</code>
+                                </div>
+                                <p class="text-xs text-gray-500 mb-4">
+                                    Si la versión de CRAN de <code class="font-mono">ENMeval</code> se queda atrás, puedes instalar la más reciente con
+                                    <code class="font-mono">remotes::install_github("jamiemkass/ENMeval")</code>.
+                                </p>
+
+                                <h5 class="font-bold text-gray-900 text-xs mb-2">Paquetes útiles según el tipo de problema (haz clic para desplegar):</h5>
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-3 items-start">
+                                <details class="group bg-white border border-gray-200 rounded p-3">
+                                    <summary class="font-bold text-gray-900 text-xs flex items-center gap-2 cursor-pointer select-none list-none [&::-webkit-details-marker]:hidden"><i class="fa-solid fa-box-open text-talavera-accent"></i> Instalación y depuración <i class="fas fa-chevron-down ml-auto text-gray-400 transition-transform group-open:rotate-180"></i></summary>
+                                    <ul class="space-y-1.5 text-xs mt-3">
+                                        <li><code class="bg-white border border-gray-200 px-1.5 py-0.5 rounded text-talavera-blue font-mono">renv</code> <span class="text-gray-600">— entornos con versiones fijas por proyecto</span></li>
+                                        <li><code class="bg-white border border-gray-200 px-1.5 py-0.5 rounded text-talavera-blue font-mono">remotes</code> <span class="text-gray-600">— instalar versiones específicas o desde GitHub</span></li>
+                                        <li><code class="bg-white border border-gray-200 px-1.5 py-0.5 rounded text-talavera-blue font-mono">sessioninfo</code> <span class="text-gray-600">— reportar versiones exactas al pedir ayuda</span></li>
+                                        <li><code class="bg-white border border-gray-200 px-1.5 py-0.5 rounded text-talavera-blue font-mono">testthat</code> <span class="text-gray-600">— pruebas unitarias para tus funciones</span></li>
+                                        <li><code class="bg-white border border-gray-200 px-1.5 py-0.5 rounded text-talavera-blue font-mono">rlang</code> <span class="text-gray-600">— mensajes de error más informativos</span></li>
+                                    </ul>
+                                </details>
+                                <details class="group bg-white border border-gray-200 rounded p-3">
+                                    <summary class="font-bold text-gray-900 text-xs flex items-center gap-2 cursor-pointer select-none list-none [&::-webkit-details-marker]:hidden"><i class="fa-solid fa-broom text-talavera-accent"></i> Datos y limpieza (tidyverse) <i class="fas fa-chevron-down ml-auto text-gray-400 transition-transform group-open:rotate-180"></i></summary>
+                                    <ul class="space-y-1.5 text-xs mt-3">
+                                        <li><code class="bg-white border border-gray-200 px-1.5 py-0.5 rounded text-talavera-blue font-mono">dplyr / tidyr</code> <span class="text-gray-600">— manipulación y orden de datos</span></li>
+                                        <li><code class="bg-white border border-gray-200 px-1.5 py-0.5 rounded text-talavera-blue font-mono">readr</code> <span class="text-gray-600">— lectura de CSV con mejor manejo de tipos</span></li>
+                                        <li><code class="bg-white border border-gray-200 px-1.5 py-0.5 rounded text-talavera-blue font-mono">purrr</code> <span class="text-gray-600">— iterar sobre varias especies o modelos</span></li>
+                                        <li><code class="bg-white border border-gray-200 px-1.5 py-0.5 rounded text-talavera-blue font-mono">janitor</code> <span class="text-gray-600">— limpieza de nombres de columnas</span></li>
+                                        <li><code class="bg-white border border-gray-200 px-1.5 py-0.5 rounded text-talavera-blue font-mono">rgbif / spocc</code> <span class="text-gray-600">— descarga de registros de ocurrencia</span></li>
+                                        <li><code class="bg-white border border-gray-200 px-1.5 py-0.5 rounded text-talavera-blue font-mono">CoordinateCleaner</code> <span class="text-gray-600">— limpieza de coordenadas erróneas</span></li>
+                                    </ul>
+                                </details>
+                                <details class="group bg-white border border-gray-200 rounded p-3">
+                                    <summary class="font-bold text-gray-900 text-xs flex items-center gap-2 cursor-pointer select-none list-none [&::-webkit-details-marker]:hidden"><i class="fa-solid fa-earth-americas text-talavera-accent"></i> Modelación de nicho (SDM/ENM) <i class="fas fa-chevron-down ml-auto text-gray-400 transition-transform group-open:rotate-180"></i></summary>
+                                    <ul class="space-y-1.5 text-xs mt-3">
+                                        <li><code class="bg-white border border-gray-200 px-1.5 py-0.5 rounded text-talavera-blue font-mono">predicts</code> <span class="text-gray-600">— sucesor de dismo: Maxent, Bioclim, Domain</span></li>
+                                        <li><code class="bg-white border border-gray-200 px-1.5 py-0.5 rounded text-talavera-blue font-mono">maxnet</code> <span class="text-gray-600">— Maxent en R puro, sin depender de Java</span></li>
+                                        <li><code class="bg-white border border-gray-200 px-1.5 py-0.5 rounded text-talavera-blue font-mono">ENMeval</code> <span class="text-gray-600">— ajuste y evaluación (partición espacial, AUC, Boyce)</span></li>
+                                        <li><code class="bg-white border border-gray-200 px-1.5 py-0.5 rounded text-talavera-blue font-mono">wallace</code> <span class="text-gray-600">— interfaz Shiny que genera código reproducible</span></li>
+                                        <li><code class="bg-white border border-gray-200 px-1.5 py-0.5 rounded text-talavera-blue font-mono">flexsdm / biomod2 / sdm</code> <span class="text-gray-600">— modelos de ensamble con varios algoritmos</span></li>
+                                        <li><code class="bg-white border border-gray-200 px-1.5 py-0.5 rounded text-talavera-blue font-mono">ecospat</code> <span class="text-gray-600">— comparación y superposición de nichos</span></li>
+                                        <li><code class="bg-white border border-gray-200 px-1.5 py-0.5 rounded text-talavera-blue font-mono">ntbox</code> <span class="text-gray-600">— PCA ambiental y extrapolación</span></li>
+                                        <li><code class="bg-white border border-gray-200 px-1.5 py-0.5 rounded text-talavera-blue font-mono">blockCV / PresenceAbsence</code> <span class="text-gray-600">— validación espacial y métricas (TSS, kappa)</span></li>
+                                    </ul>
+                                </details>
+                                <details class="group bg-white border border-gray-200 rounded p-3">
+                                    <summary class="font-bold text-gray-900 text-xs flex items-center gap-2 cursor-pointer select-none list-none [&::-webkit-details-marker]:hidden"><i class="fa-solid fa-map text-talavera-accent"></i> Visualización y mapas <i class="fas fa-chevron-down ml-auto text-gray-400 transition-transform group-open:rotate-180"></i></summary>
+                                    <ul class="space-y-1.5 text-xs mt-3">
+                                        <li><code class="bg-white border border-gray-200 px-1.5 py-0.5 rounded text-talavera-blue font-mono">ggplot2</code> <span class="text-gray-600">— base de todos los gráficos</span></li>
+                                        <li><code class="bg-white border border-gray-200 px-1.5 py-0.5 rounded text-talavera-blue font-mono">sf</code> <span class="text-gray-600">— datos vectoriales, con geom_sf()</span></li>
+                                        <li><code class="bg-white border border-gray-200 px-1.5 py-0.5 rounded text-talavera-blue font-mono">terra</code> <span class="text-gray-600">— ráster y vectores</span></li>
+                                        <li><code class="bg-white border border-gray-200 px-1.5 py-0.5 rounded text-talavera-blue font-mono">tidyterra</code> <span class="text-gray-600">— usar ráster de terra directo en ggplot2</span></li>
+                                        <li><code class="bg-white border border-gray-200 px-1.5 py-0.5 rounded text-talavera-blue font-mono">rnaturalearth</code> <span class="text-gray-600">— capas base de países y continentes</span></li>
+                                        <li><code class="bg-white border border-gray-200 px-1.5 py-0.5 rounded text-talavera-blue font-mono">patchwork</code> <span class="text-gray-600">— combinar gráficos en paneles</span></li>
+                                        <li><code class="bg-white border border-gray-200 px-1.5 py-0.5 rounded text-talavera-blue font-mono">leaflet</code> <span class="text-gray-600">— mapas interactivos en HTML</span></li>
+                                    </ul>
+                                </details>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+</main>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Tarjeta de Requisitos y Formato -->
+                    <div class="talavera-border bg-talavera-light p-8 shadow-sm info-card">
+                        <h3 class="text-xl font-bold text-talavera-blue mb-6 flex items-center gap-2">
+                            <i class="fas fa-clipboard-list text-talavera-accent"></i> Requisitos y Formato
+                        </h3>
+                        <div class="space-y-4 text-gray-700">
+                            <p>
+                                <strong class="text-talavera-blue block mb-1">Formato de esta edición:</strong>
+                                Colaborativo y sin componente competitivo. No hay equipos compitiendo ni jurado. Cada persona asiste con problemas propios de programación en R y recibe apoyo de organizadores y voluntarios.
+                            </p>
+                            <p>
+                                <strong class="text-talavera-blue block mb-1">Alcance:</strong>
+                                Acotado exclusivamente a <strong>programación en R</strong>. No se ofrecerá soporte para otros lenguajes.
+                            </p>
+                            <div class="bg-white p-4 rounded border border-blue-200 mt-4">
+                                <strong class="text-talavera-blue mb-2 block">¿Qué debes llevar?</strong>
+                                <ul class="list-disc ml-5 text-sm space-y-1">
+                                    <li>Tu propia laptop.</li>
+                                    <li>Tener instalado y actualizado R y RStudio.</li>
+                                    <li><strong>Un termo:</strong> Habrá café y agua de horchata. Promovemos un evento cero basura (sin desechables).</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-12 bg-talavera-blue text-white rounded-lg shadow-xl overflow-hidden relative">
+                    <div class="absolute top-0 right-0 p-4 opacity-20">
+                        <i class="fas fa-video text-6xl"></i>
+                    </div>
+                    <div class="p-8 md:p-10 flex flex-col md:flex-row items-center gap-8 relative z-10">
+                        <div class="flex-shrink-0 w-24 h-24 bg-white/20 rounded-full flex items-center justify-center border-2 border-white/50">
+                            <img src="img/jorge soberon.jpeg" alt="Dr. Jorge Soberón Mainero" class="w-full h-full rounded-full object-cover">
+                        </div>
+                        <div>
+                            <span class="bg-talavera-accent text-talavera-blue text-xs font-bold px-3 py-1 rounded uppercase tracking-wider mb-3 inline-block">Seminario de Apertura</span>
+                            <h3 class="text-2xl md:text-3xl font-serif font-bold mb-2">Plática Especial con el Dr. Jorge Soberón Mainero</h3>
+                            <p class="text-blue-100 text-lg mb-4">
+                                Del Departamento de Ecología y Biología Evolutiva de la Universidad de Kansas, Estados Unidos.
+                            </p>
+                            <div class="flex flex-wrap gap-4 text-sm font-medium">
+                                <span class="bg-black/20 px-3 py-1 rounded"><i class="far fa-calendar-alt mr-2"></i>Mismo día (03 de Nov)</span>
+                                <span class="bg-black/20 px-3 py-1 rounded"><i class="far fa-clock mr-2"></i>2:00 PM hora CDMX</span>
+                                <span class="bg-black/20 px-3 py-1 rounded"><i class="fas fa-globe mr-2"></i>Transmisión en Línea</span>                                
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="acerca-de" class="py-16 bg-talavera-pattern border-t border-b border-gray-200">
+            <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center mb-10">
+                    <h2 class="text-3xl md:text-4xl font-serif font-bold text-talavera-blue mb-4">Acerca De</h2>
+                    <p class="text-gray-600">Conoce más sobre el propósito de este evento y el legado que lo inspira.</p>
+                </div>
+
+                <!-- Controles de las Pestañas -->
+                <div class="flex flex-col sm:flex-row justify-center gap-4 mb-8">
+                    <button onclick="switchTab('eco-hackaton')" id="btn-eco-hackaton" class="tab-active font-semibold py-3 px-6 rounded border-2 transition duration-300 w-full sm:w-auto text-center flex justify-center items-center gap-2">
+                        <i class="fa-brands fa-pagelines"></i> Eco-Hackaton
+                    </button>
+                    <button onclick="switchTab('luis-osorio')" id="btn-luis-osorio" class="tab-inactive font-semibold py-3 px-6 rounded border-2 transition duration-300 w-full sm:w-auto text-center flex justify-center items-center gap-2">
+                        <i class="fas fa-user-graduate"></i> Luis Osorio-Olvera
+                    </button>
+                </div>
+
+                <!-- CONTENEDOR DE PESTAÑAS -->
+                <div class="bg-talavera-white talavera-border p-6 md:p-10 shadow-lg min-h-[500px]">
+                    
+                    <div id="content-eco-hackaton" class="block animate-fade-in">
+                        <h3 class="text-2xl font-serif font-bold text-talavera-blue mb-6 border-b pb-2">Sobre el Eco-Hackaton</h3>
+                        
+                        <div class="space-y-6 text-gray-700 leading-relaxed">
+                            <div>
+                                <h4 class="font-bold text-lg text-gray-900 mb-2">¿Qué es un hackathon?</h4>
+                                <p>Un hackathon (de "hack" + "marathon") es un evento en el que un grupo de personas, con distintos niveles de experiencia, se reúne durante un tiempo acotado para trabajar de forma intensiva y colaborativa en problemas de programación. En su forma más tradicional es competitivo. El formato también se adapta bien a una versión no competitiva, centrada en el aprendizaje colectivo y la ayuda mutua.</p>
+                            </div>
+
+                            <div>
+                                <h4 class="font-bold text-lg text-gray-900 mb-2">Objetivo del Eco-Hackaton</h4>
+                                <p>Establecer una actividad anual, multisede, que ofrezca un espacio donde investigadores, estudiantes y colegas puedan acercarse con problemas de programación en R y recibir apoyo directo de otros miembros de la comunidad, en un ambiente de colaboración que honre el estilo de trabajo y la generosidad del Dr. Luis A. Osorio Olvera.</p>
+                            </div>
+
+                            <div class="bg-blue-50 p-5 rounded border border-blue-100">
+                                <h4 class="font-bold text-lg text-talavera-blue mb-2">Formato de esta edición</h4>
+                                <p>Este hackathon será colaborativo y sin componente competitivo: no habrá equipos que compitan entre sí ni un jurado que premie una solución "ganadora". Cada persona asiste con problemas propios de programación en R y recibe apoyo. La forma de trabajar será libre: cada asistente decide si prefiere resolver su problema de manera individual o formar un pequeño equipo.</p>
+                            </div>
+
+                            <div>
+                                <h4 class="font-bold text-lg text-gray-900 mb-3">Ejemplos de problemas que puedes traer:</h4>
+                                <ul class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                                    <li class="flex items-start gap-2"><i class="fas fa-check-circle text-talavera-accent mt-1"></i> <span>Errores al instalar o cargar paquetes (dependencias, versiones).</span></li>
+                                    <li class="flex items-start gap-2"><i class="fas fa-check-circle text-talavera-accent mt-1"></i> <span>Código que no corre o arroja errores inesperados.</span></li>
+                                    <li class="flex items-start gap-2"><i class="fas fa-check-circle text-talavera-accent mt-1"></i> <span>Manejo y limpieza de datos (data wrangling) con tidyverse.</span></li>
+                                    <li class="flex items-start gap-2"><i class="fas fa-check-circle text-talavera-accent mt-1"></i> <span>Ajuste y evaluación de modelos de nicho ecológico (MaxEnt, ENMeval, wallace).</span></li>
+                                    <li class="flex items-start gap-2"><i class="fas fa-check-circle text-talavera-accent mt-1"></i> <span>Flujos de trabajo reproducibles y control de versiones (Git/GitHub).</span></li>
+                                    <li class="flex items-start gap-2"><i class="fas fa-check-circle text-talavera-accent mt-1"></i> <span>Visualización de datos y mapas (ggplot2, sf, terra/raster).</span></li>
+                                    <li class="flex items-start gap-2"><i class="fas fa-check-circle text-talavera-accent mt-1"></i> <span>Código lento o que consume demasiada memoria.</span></li>
+                                </ul>
+                            </div>
+
+                            <div>
+                                <h4 class="font-bold text-lg text-gray-900 mb-2">Alcance de la actividad</h4>
+                                <p>La propuesta es acotar la actividad a problemas de programación en R. No se ofrecerá soporte para otros lenguajes. La temática ecológica es bienvenida y probablemente predominará de forma natural, pero no será un requisito: cualquier problema de programación en R puede llevarse al evento.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="content-luis-osorio" class="hidden animate-fade-in">
+                        <div class="flex flex-col md:flex-row gap-8">
+                            <!-- Columna Foto -->
+                            <div class="md:w-1/3 flex flex-col items-center">
+                                <div class="w-48 h-48 md:w-full md:h-auto md:aspect-square rounded-sm overflow-hidden border-4 border-talavera-blue shadow-md mb-4 bg-gray-200">
+                                    <!-- Usando una imagen placeholder respetuosa ya que no tengo acceso al archivo de imagen real -->
+                                    <img src="img/luis-osorio.jpg" alt="Dr. Luis Alfredo Osorio Olvera" class="w-full h-full object-cover grayscale hover:grayscale-0 transition duration-500">
+                                </div>
+                                <div class="text-center w-full">
+                                    <h3 class="font-serif font-bold text-talavera-blue text-lg">Dr. Luis Osorio-Olvera</h3>
+                                    <p class="text-sm text-gray-500 font-medium">Noviembre 1985 - Julio 2026</p>
+                                </div>
+                            </div>
+                            
+                            <!-- Columna Biografía -->
+                            <div class="md:w-2/3 space-y-5 text-gray-700">
+                                <p class="text-lg font-serif italic text-gray-900 border-l-4 border-talavera-accent pl-4">
+                                    El Dr. Luis A. Osorio Olvera fue un destacado biólogo y ecólogo teórico mexicano cuyo legado científico y humano deja una huella imborrable en la comunidad académica nacional e internacional. Su trayectoria se distinguió por una brillante combinación de rigor teórico, metodologías computacionales avanzadas y una constante inclinación al trabajo colaborativo e incluyente.
+                                </p>
+                                <p class="text-sm">
+                                    Egresado de la licenciatura en Biología por la Benemérita Universidad Autónoma de Puebla (BUAP), realizó sus estudios de Maestría y Doctorado en Ciencias en la Universidad Nacional Autónoma de México (UNAM). Sus primeros pasos en la investigación de posgrado los dio analizando la ecología de poblaciones del ajolote de Xochimilco. Posteriormente, realizó estancias de investigación en el Laboratorio de Análisis Espaciales del Instituto de Biología de la UNAM y en el <em>Biodiversity Institute</em> de la Universidad de Kansas, Estados Unidos.
+                                </p>
+                                <p class="text-sm">
+                                    Su línea de investigación se enfocó en la ecoinformática, la biogeografía, la conservación, el impacto del cambio climático, las invasiones biológicas y la hipótesis de centralidad de nicho. Durante su estancia posdoctoral en la Universidad de Kansas —desarrollada junto con su esposa, la Dra. Rusby Contreras, en el periodo de la pandemia de COVID-19—, trabajó arduamente en uno de sus aportes teóricos más desafiantes: la integración de términos de movimiento a los algoritmos estáticos de modelado de nichos ecológicos. Estos desarrollos, de alta complejidad computacional, derivaron en publicaciones de gran impacto e innovaciones metodológicas presentadas en diversos foros internacionales, reafirmando su visión de la ciencia como una labor sin fronteras.
+                                </p>
+                                <p class="text-sm">
+                                    Como investigador e integrante del Sistema Nacional de Investigadoras e Investigadores (SNII Nivel I), ingresó al Instituto de Ecología de la UNAM, donde además de su labor científica asumió tempranamente responsabilidades académico-administrativas, desempeñándose como jefe del Departamento de Ecología de la Biodiversidad.
+                                </p>
+                                <p class="text-sm">
+                                    A lo largo de su carrera, firmó más de 80 contribuciones científicas indizadas en revistas de alto prestigio como <em>Global Change Biology</em>, <em>Biological Conservation</em> y <em>Ecological Informatics</em>, acumulando miles de citas. Asimismo, fue un pionero en el desarrollo de herramientas y paquetes de código abierto en R para el análisis espacial y ecoinformático, destacando desarrollos y coautorías clave como:
+                                </p>
+                                <ul class="text-sm space-y-2 list-disc pl-5">
+                                    <li><strong>ntbox:</strong> Plataforma con interfaz gráfica en Shiny para el modelado de nicho mediante elipsoides de volumen mínimo.</li>
+                                    <li><strong>bamm:</strong> Herramienta para la estimación de modelos dinámicos de distribución basados en variables bióticas y abióticas.</li>
+                                    <li><strong>tenm:</strong> Marco para la calibración de modelos de nicho ecológico tiempo-específicos.</li>
+                                    <li><strong>kuenm:</strong> Paquete para el desarrollo y evaluación detallada de modelos de nicho con MaxEnt.</li>
+                                    <li><strong>fpROC:</strong> Implementación rápida para la prueba estadística "Partial ROC".</li>
+                                    <li><strong>smop:</strong> Optimización del análisis de Paridad Orientada a la Movilidad (MOP).</li>
+                                    <li><strong>fastbioclim:</strong> Generación eficiente de variables bioclimáticas en marcos temporales personalizados.</li>
+                                </ul>
+                                <p class="text-sm">
+                                    Más allá de sus notables logros académicos y computacionales, Luis Osorio destacó por sus virtudes humanas. Quienes compartieron el aula, el laboratorio o los comités tutelares con él coinciden en tres cualidades fundamentales: un ser humano profundamente generoso, amable y de nobles intenciones; un ecólogo teórico excepcional con una capacidad sobresaliente para resolver problemas complejos en equipo; y un maestro y mentor entregado, siempre dispuesto a compartir su tiempo, sus ideas y su conocimiento con sus estudiantes de posgrado.
+                                </p>
+                                <p class="text-sm">
+                                    Su pronta partida, el sábado 4 de julio, deja un vacío inmenso. El Instituto de Ecología y la ciencia mexicana pierden a un investigador prolífico y prometedor, a un mentor ejemplar y a un colega extraordinario cuyo legado perdurará en sus publicaciones, sus herramientas de código abierto y en las futuras generaciones de científicos que formó.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="py-16 bg-talavera-white">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+                    
+                    <!-- Columna Izquierda: Registro y Redes -->
+                    <div id="registro" class="flex flex-col justify-center">
+                        <div class="text-center lg:text-left mb-8">
+                            <h2 class="text-3xl font-serif font-bold text-talavera-blue mb-4">Únete al Evento</h2>
+                            <p class="text-gray-600 mb-8">Asegura tu lugar en cualquiera de nuestras sedes. El registro es completamente gratuito.</p>
+                            
+                            <button class="w-full sm:w-auto bg-talavera-blue text-white px-10 py-4 rounded-md text-xl font-bold hover:bg-blue-800 transition shadow-lg transform hover:-translate-y-1">
+                                <i class="fas fa-user-plus mr-2"></i> Formulario de Registro
+                            </button>
+                        </div>
+
+                        <div class="mt-8 pt-8 border-t border-gray-200">
+                            <h3 class="text-lg font-bold text-gray-800 mb-4 text-center lg:text-left">Síguenos en nuestras redes</h3>
+                            <div class="flex justify-center lg:justify-start gap-4">
+                                <a href="https://www.facebook.com/labecounam/" class="w-12 h-12 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center text-xl hover:bg-blue-600 hover:text-white transition">
+                                    <i class="fab fa-facebook-f"></i>
+                                </a>
+                                <a href="https://www.instagram.com/ecohackathon_/" class="w-12 h-12 rounded-full bg-pink-50 text-pink-600 flex items-center justify-center text-xl hover:bg-pink-600 hover:text-white transition">
+                                    <i class="fab fa-instagram"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Columna Derecha: Buzón de Preguntas / Contacto -->
+                    <div class="bg-talavera-light p-8 rounded-lg talavera-border shadow-sm">
+                        <h3 class="text-2xl font-serif font-bold text-talavera-blue mb-6">Buzón de Comentarios</h3>
+                        <form onsubmit="event.preventDefault(); showMessage();" class="space-y-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Nombre</label>
+                                <input type="text" required class="w-full px-4 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-talavera-blue focus:border-talavera-blue outline-none transition">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Correo Electrónico</label>
+                                <input type="email" required class="w-full px-4 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-talavera-blue focus:border-talavera-blue outline-none transition">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Tu pregunta o comentario</label>
+                                <textarea rows="4" required class="w-full px-4 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-talavera-blue focus:border-talavera-blue outline-none transition resize-none"></textarea>
+                            </div>
+                            <button type="submit" class="w-full bg-talavera-accent text-white font-bold py-2 px-4 rounded hover:bg-yellow-600 transition">
+                                Enviar Mensaje
+                            </button>
+                            <div id="form-message" class="hidden text-green-600 text-sm text-center mt-2 font-medium">¡Mensaje enviado con éxito!</div>
+                        </form>
+                    </div>
+
+                </div>
+                
+                <div class="mt-20 max-w-4xl mx-auto">
+                    <h2 class="text-3xl font-serif font-bold text-center text-talavera-blue mb-8">Preguntas Frecuentes</h2>
+                    
+                    <div class="space-y-4">
+                        <!-- FAQ 1 -->
+                        <details class="group bg-white border border-gray-200 rounded p-4 shadow-sm cursor-pointer [&_summary::-webkit-details-marker]:hidden">
+                            <summary class="flex justify-between items-center font-medium text-gray-900 list-none">
+                                <span>¿Tiene algún costo de inscripción?</span>
+                                <span class="transition group-open:rotate-180">
+                                    <i class="fas fa-chevron-down text-talavera-blue"></i>
+                                </span>
+                            </summary>
+                            <p class="text-gray-600 mt-3 border-t pt-3">No, el Eco-Hackaton es un evento completamente gratuito. Solo requerimos tu registro previo para organizar los espacios en las sedes.</p>
+                        </details>
+                        
+                        <!-- FAQ 2 -->
+                        <details class="group bg-white border border-gray-200 rounded p-4 shadow-sm cursor-pointer [&_summary::-webkit-details-marker]:hidden">
+                            <summary class="flex justify-between items-center font-medium text-gray-900 list-none">
+                                <span>¿Necesito ser experto en R para asistir?</span>
+                                <span class="transition group-open:rotate-180">
+                                    <i class="fas fa-chevron-down text-talavera-blue"></i>
+                                </span>
+                            </summary>
+                            <p class="text-gray-600 mt-3 border-t pt-3">¡Para nada! El evento está diseñado para personas con distintos niveles de experiencia. Puedes traer un problema básico o avanzado; la comunidad está para ayudar.</p>
+                        </details>
+
+                        <!-- FAQ 3 -->
+                        <details class="group bg-white border border-gray-200 rounded p-4 shadow-sm cursor-pointer [&_summary::-webkit-details-marker]:hidden">
+                            <summary class="flex justify-between items-center font-medium text-gray-900 list-none">
+                                <span>¿Qué pasa si uso Python u otro lenguaje?</span>
+                                <span class="transition group-open:rotate-180">
+                                    <i class="fas fa-chevron-down text-talavera-blue"></i>
+                                </span>
+                            </summary>
+                            <p class="text-gray-600 mt-3 border-t pt-3">En esta edición, el alcance está acotado exclusivamente a problemas de programación en R. No podremos ofrecer soporte para otros lenguajes.</p>
+                        </details>
+                        
+                        <!-- FAQ 4 -->
+                        <details class="group bg-white border border-gray-200 rounded p-4 shadow-sm cursor-pointer [&_summary::-webkit-details-marker]:hidden">
+                            <summary class="flex justify-between items-center font-medium text-gray-900 list-none">
+                                <span>¿Puedo ver el seminario de apertura si no asisto al hackaton?</span>
+                                <span class="transition group-open:rotate-180">
+                                    <i class="fas fa-chevron-down text-talavera-blue"></i>
+                                </span>
+                            </summary>
+                            <p class="text-gray-600 mt-3 border-t pt-3">Sí, la plática de Luis Darcy Verde será transmitida en línea a las 2:00 PM y será de acceso público para cualquier persona interesada.</p>
+                        </details>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="bg-talavera-blue text-white py-10 border-t-8 border-talavera-accent">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row justify-between items-center gap-6">
+            <div class="text-center md:text-left">
+                <div class="flex items-center justify-center md:justify-start gap-2 mb-2">
+                    <i class="fa-brands fa-r-project text-2xl text-talavera-accent"></i>
+                    <h2 class="text-xl font-serif font-bold">Eco-Hackaton</h2>
+                </div>
+                <p class="text-blue-200 text-sm">En memoria del Dr. Luis Alfredo Osorio Olvera (1985-2026)</p>
+            </div>
+            <div class="text-center md:text-right text-sm text-blue-200">
+                <p>&copy; 2026 Comité Organizador del Eco-Hackaton.</p>
+            </div>
+        </div>
+    </footer>
+<!-- Lógica JavaScript para Tabs y UI -->
+    <script>
+        // Función para cambiar de pestañas en la sección "Acerca de"
+        function switchTab(tabName) {
+            const btnEco = document.getElementById('btn-eco-hackaton');
+            const btnLuis = document.getElementById('btn-luis-osorio');
+            const contentEco = document.getElementById('content-eco-hackaton');
+            const contentLuis = document.getElementById('content-luis-osorio');
+
+            if (tabName === 'eco-hackaton') {
+                // Estilos botones
+                btnEco.className = 'tab-active font-semibold py-3 px-6 rounded border-2 transition duration-300 w-full sm:w-auto text-center flex justify-center items-center gap-2';
+                btnLuis.className = 'tab-inactive font-semibold py-3 px-6 rounded border-2 transition duration-300 w-full sm:w-auto text-center flex justify-center items-center gap-2';
+                // Mostrar/Ocultar contenido
+                contentEco.classList.remove('hidden');
+                contentEco.classList.add('block');
+                contentLuis.classList.remove('block');
+                contentLuis.classList.add('hidden');
+            } else {
+                // Estilos botones
+                btnLuis.className = 'tab-active font-semibold py-3 px-6 rounded border-2 transition duration-300 w-full sm:w-auto text-center flex justify-center items-center gap-2';
+                btnEco.className = 'tab-inactive font-semibold py-3 px-6 rounded border-2 transition duration-300 w-full sm:w-auto text-center flex justify-center items-center gap-2';
+                // Mostrar/Ocultar contenido
+                contentLuis.classList.remove('hidden');
+                contentLuis.classList.add('block');
+                contentEco.classList.remove('block');
+                contentEco.classList.add('hidden');
+            }
+        }
+
+        // Función para mostrar/ocultar el menú móvil
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobile-menu');
+            if (menu.classList.contains('hidden')) {
+                menu.classList.remove('hidden');
+            } else {
+                menu.classList.add('hidden');
+            }
+        }
+
+        // Simulación de envío de formulario para evitar alertas molestas
+        function showMessage() {
+            const msg = document.getElementById('form-message');
+            msg.classList.remove('hidden');
+            setTimeout(() => {
+                msg.classList.add('hidden');
+                // Limpiar formulario
+                document.querySelector('form').reset();
+            }, 3000);
+        }
+    </script>
+</body>
+</html>
